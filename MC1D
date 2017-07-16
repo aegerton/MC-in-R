@@ -1,0 +1,107 @@
+L<-7.5e6
+R<-2.5e6
+scale<-15.08707
+shape<-0.8592507
+lambda.risk<-2
+lambda.CAT<-0.4
+iterations<-replicate(10000,{
+claims1<-0
+claims2<-0
+claims3<-0
+claims4<-0
+claims5<-0
+claims6<-0
+claims7<-0
+claims8<-0
+claims9<-0
+claims10<-0
+claims11<-0
+claims12<-0
+claims13<-0
+claims14<-0
+claims15<-0
+claims16<-0
+claims17<-0
+claims18<-0
+claims19<-0
+claims20<-0
+claims21<-0
+claims22<-0
+claims23<-0
+claims24<-0
+claims25<-0
+claims<-c(claims1,claims2,claims3,claims4,claims5,claims6,claims7,claims8,claims9,claims10,claims11,claims12,claims13,claims14,claims15,claims16,claims17,claims18,claims19,claims20,claims21,claims22,claims23,claims24,claims25)
+freq<-(qpois(runif(1),lambda.risk))
+sev<-pmin(L,pmax(0,(qlnorm(runif(1),scale,shape)-R)))
+if(freq>=1){claims1<-sev}
+sev<-pmin(L,pmax(0,(qlnorm(runif(1),scale,shape)-R)))
+if(freq>=2){claims2<-sev}
+sev<-pmin(L,pmax(0,(qlnorm(runif(1),scale,shape)-R)))
+if (freq>=3) {claims3<-sev}
+sev<-pmin(L,pmax(0,(qlnorm(runif(1),scale,shape)-R)))
+if (freq>=4) {claims4<-sev}
+sev<-pmin(L,pmax(0,(qlnorm(runif(1),scale,shape)-R)))
+if (freq>=5) {claims5<-sev}
+sev<-pmin(L,pmax(0,(qlnorm(runif(1),scale,shape)-R)))
+if (freq>=6) {claims6<-sev}
+sev<-pmin(L,pmax(0,(qlnorm(runif(1),scale,shape)-R)))
+if (freq>=7) {claims7<-sev}
+sev<-pmin(L,pmax(0,(qlnorm(runif(1),scale,shape)-R)))
+if (freq>=8) {claims8<-sev}
+sev<-pmin(L,pmax(0,(qlnorm(runif(1),scale,shape)-R)))
+if (freq>=9) {claims9<-sev}
+sev<-pmin(L,pmax(0,(qlnorm(runif(1),scale,shape)-R)))
+if (freq>=10) {claims10<-sev}
+sev<-pmin(L,pmax(0,(qlnorm(runif(1),scale,shape)-R)))
+if (freq>=11) {claims11<-sev}
+sev<-pmin(L,pmax(0,(qlnorm(runif(1),scale,shape)-R)))
+if (freq>=12) {claims12<-sev}
+sev<-pmin(L,pmax(0,(qlnorm(runif(1),scale,shape)-R)))
+if (freq>=13) {claims13<-sev}
+sev<-pmin(L,pmax(0,(qlnorm(runif(1),scale,shape)-R)))
+if (freq>=14) {claims14<-sev}
+sev<-pmin(L,pmax(0,(qlnorm(runif(1),scale,shape)-R)))
+if (freq>=15) {claims15<-sev}
+sev<-pmin(L,pmax(0,(qlnorm(runif(1),scale,shape)-R)))
+if (freq>=16) {claims16<-sev}
+CAT<-(qpois(runif(1),lambda.CAT))
+if (CAT>=1) {claims17<-L}
+if (CAT>=2) {claims18<-L}
+if (CAT>=3) {claims19<-L}
+if (CAT>=4) {claims20<-L}
+if (CAT>=5) {claims21<-L}
+if (CAT>=6) {claims22<-L}
+if (CAT>=7) {claims23<-L}
+if (CAT>=8) {claims24<-L}
+if (CAT>=9) {claims25<-L}
+claims<-c(claims1,claims2,claims3,claims4,claims5,claims6,claims7,claims8,claims9,claims10,claims11,claims12,claims13,claims14,claims15,claims16,claims17,claims18,claims19,claims20,claims21,claims22,claims23,claims24,claims25)
+min(22.5e6,sum(claims))
+})
+
+agg.loss<-replicate(10000,{
+term<-0
+term<-iterations[runif(3,1,10000)]
+agg.loss<-min(45e6,sum(term))
+})
+
+agg.loss<-t(t(agg.loss))
+agg.premium[1:10000]<-4.636e6*3
+agg.term.results<-data.frame(agg.premium,agg.loss)
+agg.term.results$reinst.premium<-with(agg.term.results,4.636e6*(pmin(4,(agg.loss/L))))
+agg.term.results$profit<-with(agg.term.results,agg.premium-agg.loss+reinst.premium)
+sum(agg.term.results$profit<0)
+
+
+
+agg.net.profit<-subset(agg.net.all,agg.net.all>0)
+agg.net.loss<-subset(agg.net.all,agg.net.all<0)
+agg.net.allUSD<-agg.net.all/1.3119
+agg.net.profitUSD<-agg.net.profit/1.3119
+agg.net.lossUSD<-agg.net.loss/1.3119
+summary(agg.net.allUSD)
+plotdist(agg.net.allUSD)
+sum(agg.net.allUSD<0)
+sum(agg.net.allUSD>0)
+sum(agg.net.lossUSD)/sum(agg.net.all<0)
+sum(agg.net.profitUSD)/sum(agg.net.all>0)
+quantile(agg.net.allUSD,0.01)
