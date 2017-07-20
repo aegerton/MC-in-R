@@ -32,9 +32,6 @@ agg.term.results<-data.frame(agg.premium,agg.loss)
 agg.term.results$reinst.premium<-with(agg.term.results,P*(pmin(4,(agg.loss/L))))
 agg.term.results$profit<-with(agg.term.results,agg.premium-agg.loss+reinst.premium)
 sum(agg.term.results$profit<0)
-
-
-
 agg.net.profit<-subset(agg.net.all,agg.net.all>0)
 agg.net.loss<-subset(agg.net.all,agg.net.all<0)
 agg.net.allUSD<-agg.net.all/1.3119
