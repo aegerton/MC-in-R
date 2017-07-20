@@ -27,23 +27,26 @@ iterations<-replicate(10000,{
 agg.loss<-replicate(10000,min(T,sum(sample(iterations,size=years,replace=TRUE))))
 
 agg.loss<-t(t(agg.loss))
-agg.premium[1:10000]<-P*3
-agg.term.results<-data.frame(agg.premium,agg.loss)
-agg.term.results$reinst.premium<-with(agg.term.results,P*(pmin(4,(agg.loss/L))))
-agg.term.results$profit<-with(agg.term.results,agg.premium-agg.loss+reinst.premium)
-sum(agg.term.results$profit<0)
-
-
-
-agg.net.profit<-subset(agg.net.all,agg.net.all>0)
-agg.net.loss<-subset(agg.net.all,agg.net.all<0)
-agg.net.allUSD<-agg.net.all/1.3119
-agg.net.profitUSD<-agg.net.profit/1.3119
-agg.net.lossUSD<-agg.net.loss/1.3119
-summary(agg.net.allUSD)
-plotdist(agg.net.allUSD)
-sum(agg.net.allUSD<0)
-sum(agg.net.allUSD>0)
-sum(agg.net.lossUSD)/sum(agg.net.all<0)
-sum(agg.net.profitUSD)/sum(agg.net.all>0)
-quantile(agg.net.allUSD,0.01)
+agg.premium<-P
+agg.premium[1:10000]<-P*years
+agg.premium<-t(t(agg.premium))
+agg.term.results<-data.frame(agg.loss)
+agg.term.results$total.premium<-with(agg.term.results,P*(years+(pmin(4,(agg.loss/L)))))
+agg.term.results$commission <-with(agg.term.results,P*years*c)
+agg.term.results$profit<-with(agg.term.results,total.premium-agg.loss-commission)
+agg.term.results$margin<-with(agg.term.results,pmin(P*1.2,pmax(0,profit)))
+agg.term.results$HUL.profit<-with(agg.term.results,margin*HUL)
+agg.term.results$net.margin <-with(agg.term.results,margin-HUL.profit)
+agg.term.results$net.result <-with(agg.term.results,pmin(net.margin,profit))
+head(agg.term.results)
+agg.net.profit<-subset(agg.term.results$net.result,agg.term.results$net.result>0)
+agg.net.loss<-subset(agg.term.results$net.result,agg.term.results$net.result<0)
+agg.net.profitUSD<-agg.net.profit/AUD
+agg.net.lossUSD<-agg.net.loss/AUD
+plotdist(agg.term.results$net.result)
+sum(agg.net.loss<0)
+sum(agg.net.profit>0)
+sum(agg.net.lossUSD)/sum(agg.net.loss<0)
+sum(agg.net.profitUSD)/sum(agg.net.profit>0)
+quantile(agg.term.results$net.result,0.01)/AUD
+summary(agg.term.results/AUD)
