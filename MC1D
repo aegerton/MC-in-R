@@ -1,9 +1,16 @@
 L<-7.5e6
 R<-2.5e6
+A<-22.5e6
+T<-45e6
+P<-4.636e6
+c<-0.02
+HUL<-0.2
+years<-3
 scale<-15.08707
 shape<-0.8592507
 lambda.risk<-2
 lambda.CAT<-0.4
+AUD<-1.3119
 iterations<-replicate(10000,{
   freq<-(qpois(runif(1),lambda.risk))
   i<-1
@@ -20,9 +27,9 @@ iterations<-replicate(10000,{
 agg.loss<-replicate(10000,min(T,sum(sample(iterations,size=years,replace=TRUE))))
 
 agg.loss<-t(t(agg.loss))
-agg.premium[1:10000]<-4.636e6*3
+agg.premium[1:10000]<-P*3
 agg.term.results<-data.frame(agg.premium,agg.loss)
-agg.term.results$reinst.premium<-with(agg.term.results,4.636e6*(pmin(4,(agg.loss/L))))
+agg.term.results$reinst.premium<-with(agg.term.results,P*(pmin(4,(agg.loss/L))))
 agg.term.results$profit<-with(agg.term.results,agg.premium-agg.loss+reinst.premium)
 sum(agg.term.results$profit<0)
 
