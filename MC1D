@@ -24,10 +24,6 @@ iterations<-replicate(10000,{
   min(A,(temp+(CAT*L)))
 })
 agg.loss<-replicate(10000,min(T,sum(sample(iterations,size=years,replace=TRUE))))
-agg.loss<-t(t(agg.loss))
-agg.premium<-P
-agg.premium[1:10000]<-P*years
-agg.premium<-t(t(agg.premium))
 agg.term.results<-data.frame(agg.loss)
 agg.term.results$total.premium<-with(agg.term.results,P*(years+(pmin(4,(agg.loss/L)))))
 agg.term.results$commission <-with(agg.term.results,P*years*c)
