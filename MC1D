@@ -17,11 +17,7 @@ iterations<-replicate(10000,{
   min(A,(temp+(CAT*L)))
 })
 
-agg.loss<-replicate(10000,{
-term<-0
-term<-iterations[runif(3,1,10000)]
-agg.loss<-min(45e6,sum(term))
-})
+agg.loss<-replicate(10000,min(T,sum(sample(iterations,size=years,replace=TRUE))))
 
 agg.loss<-t(t(agg.loss))
 agg.premium[1:10000]<-4.636e6*3
